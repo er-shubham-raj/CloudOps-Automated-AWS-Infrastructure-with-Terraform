@@ -429,16 +429,4 @@ Computer Science Engineering
 Vellore Institute of Technology, Bhopal
 
 [GitHub](https://github.com/er-shubham-raj) · [LinkedIn](https://www.linkedin.com/in/shubham-raj-a0979a289/)
-```
 
-### One thing I strongly recommend
-
-Because you're using the original project as your starting point, **don't leave the README saying you independently designed everything** if you haven't modified it. The README above deliberately says *"based on publicly available DevOps learning material"* in the disclaimer.
-
-Once you actually deploy it, we should replace generic statements with **your real implementation details**, for example:
-
-> "Provisioned a VPC with 2 AZs, 4 subnets, an ALB, Auto Scaling Group and RDS using 6 reusable Terraform modules."
-
-That is far more convincing in a Plivo interview because I can then question you about **your exact architecture** rather than a generic tutorial.
-
-Also, before putting the project on your resume, **remove `variables.tfvars` secrets from Git history** if the cloned repository contains credentials/passwords. Use variables/environment variables or AWS Secrets Manager instead.
