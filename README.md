@@ -1,61 +1,52 @@
-# CloudOps-Automated-AWS-Infrastructure-with-Terraform
+# CloudOps — Automated AWS Infrastructure with Terraform
 
 > A production-style two-tier AWS architecture provisioned and managed using Terraform, with a focus on scalability, security, availability, and infrastructure automation.
 
+---
+
 ## 📌 Overview
 
-**CloudForge** demonstrates the design and automated provisioning of a **two-tier application infrastructure on AWS using Terraform**.
+**CloudOps** demonstrates the design and automated provisioning of a **two-tier application infrastructure on AWS using Terraform**.
 
 The project uses **Infrastructure as Code (IaC)** to provision and manage AWS resources through reusable Terraform modules rather than manually configuring infrastructure through the AWS Console.
 
 The architecture separates the **application layer** from the **database layer** and incorporates load balancing, auto scaling, managed database services, DNS, CDN delivery, web application security, and SSL/TLS encryption.
 
+---
+
 ## 🏗️ Architecture
 
-```text
-                         Internet
-                            │
-                            ▼
-                     ┌──────────────┐
-                     │   Route 53   │
-                     │     DNS      │
-                     └──────┬───────┘
-                            │
-                            ▼
-                     ┌──────────────┐
-                     │  CloudFront  │
-                     │     CDN      │
-                     └──────┬───────┘
-                            │
-                            ▼
-                     ┌──────────────┐
-                     │     WAF      │
-                     │ Web Security │
-                     └──────┬───────┘
-                            │
-                            ▼
-                     ┌──────────────┐
-                     │     ALB      │
-                     │Load Balancer │
-                     └──────┬───────┘
-                            │
-                    ┌───────┴───────┐
-                    ▼               ▼
-             ┌────────────┐  ┌────────────┐
-             │    EC2     │  │    EC2     │
-             │ Application│  │ Application│
-             └─────┬──────┘  └─────┬──────┘
-                   │               │
-                   └───────┬───────┘
-                           ▼
-                    ┌────────────┐
-                    │    RDS     │
-                    │  Database  │
-                    └────────────┘
+![CloudOps AWS Two-Tier Architecture](./architecture.png)
 
-              Infrastructure managed by
-                       Terraform
+### Architecture Flow
+
+```text
+Client / User
+     │
+     ▼
+  Route 53
+     │
+     ▼
+ CloudFront
+     │
+     ▼
+   AWS WAF
+     │
+     ▼
+    ALB
+     │
+ ┌───┴────┐
+ ▼        ▼
+EC2      EC2
+ │        │
+ └───┬────┘
+     ▼
+    RDS
 ```
+
+The complete infrastructure is deployed inside an AWS VPC across multiple Availability Zones and is managed through Terraform.
+
+---
 
 ## 🎯 Project Objectives
 
@@ -69,6 +60,8 @@ The architecture separates the **application layer** from the **database layer**
 - Improve content delivery using **Amazon CloudFront**
 - Protect web traffic using **AWS WAF**
 - Enable secure communication using **AWS Certificate Manager (ACM)**
+
+---
 
 ## 🛠️ Technology Stack
 
@@ -93,11 +86,15 @@ The architecture separates the **application layer** from the **database layer**
 - AWS WAF
 - AWS Certificate Manager (ACM)
 
+---
+
 ## 🔐 Networking & Security
 
 ### VPC
 
 The infrastructure is deployed inside an isolated **Amazon VPC** with subnet and routing configuration designed to separate different parts of the application infrastructure.
+
+The architecture uses multiple Availability Zones to improve infrastructure availability.
 
 ### IAM
 
@@ -113,13 +110,17 @@ AWS WAF provides an additional web-layer security control for filtering potentia
 
 ### SSL/TLS
 
-AWS Certificate Manager is used to support encrypted HTTPS communication.
+AWS Certificate Manager (ACM) is used to support encrypted HTTPS communication.
+
+---
 
 ## ⚡ Compute & Scalability
 
-### EC2
+### Amazon EC2
 
 Amazon EC2 instances provide the compute layer for the application.
+
+The application instances are distributed across Availability Zones to improve availability.
 
 ### Application Load Balancer
 
@@ -131,17 +132,21 @@ The Auto Scaling configuration allows the application tier to adjust the number 
 
 This improves availability and allows the infrastructure to handle changing workloads.
 
+---
+
 ## 🗄️ Database & Storage
 
 ### Amazon RDS
 
 Amazon RDS provides the managed relational database layer.
 
-Using RDS removes the need to manually manage the underlying database server infrastructure.
+The architecture contains database infrastructure within private subnets, keeping the database layer separated from the public application-facing components.
 
 ### Amazon S3
 
-Amazon S3 provides object storage for application-related assets and other supported data.
+Amazon S3 provides object storage for application-related assets, logs, backups, and other supported data.
+
+---
 
 ## 🌐 DNS & Content Delivery
 
@@ -152,6 +157,12 @@ Amazon Route 53 provides DNS management for the application domain.
 ### CloudFront
 
 Amazon CloudFront acts as the CDN layer to improve content delivery performance by serving supported content through geographically distributed edge locations.
+
+### AWS WAF
+
+AWS WAF provides web application protection for HTTP/HTTPS traffic before it reaches the application infrastructure.
+
+---
 
 ## 🏗️ Terraform Structure
 
@@ -184,6 +195,8 @@ The infrastructure is organized using reusable Terraform modules.
 | `modules/` | Reusable infrastructure modules |
 | `README.md` | Project documentation |
 
+---
+
 ## 🚀 Deployment
 
 ### Prerequisites
@@ -210,12 +223,16 @@ Verify your AWS credentials:
 aws sts get-caller-identity
 ```
 
+---
+
 ### 1. Clone the Repository
 
 ```bash
 git clone <YOUR-REPOSITORY-URL>
 cd <YOUR-REPOSITORY-NAME>
 ```
+
+---
 
 ### 2. Configure AWS Credentials
 
@@ -234,7 +251,15 @@ Default region
 Output format
 ```
 
-**Do not commit AWS credentials to the repository.**
+Verify that AWS authentication is working:
+
+```bash
+aws sts get-caller-identity
+```
+
+> **Never commit AWS credentials to the repository.**
+
+---
 
 ### 3. Configure Variables
 
@@ -249,13 +274,15 @@ Update environment-specific values such as:
 
 - AWS region
 - VPC CIDR
-- subnet configuration
-- instance configuration
+- Subnet configuration
+- EC2 instance configuration
 - RDS configuration
-- domain name
-- database credentials
+- Domain name
+- Database credentials
 
-**Never commit real passwords, access keys, secret keys, or other sensitive credentials.**
+> **Never commit real passwords, access keys, secret keys, or other sensitive credentials.**
+
+---
 
 ### 4. Initialize Terraform
 
@@ -265,6 +292,8 @@ terraform init
 
 This initializes the Terraform working directory and downloads the required provider dependencies.
 
+---
+
 ### 5. Validate the Configuration
 
 ```bash
@@ -273,13 +302,17 @@ terraform validate
 
 This checks whether the Terraform configuration is syntactically valid.
 
+---
+
 ### 6. Review the Execution Plan
 
 ```bash
 terraform plan -var-file=variables.tfvars
 ```
 
-Review the resources Terraform intends to create, modify, or destroy.
+Review the resources Terraform intends to create, modify, or destroy before applying the configuration.
+
+---
 
 ### 7. Provision the Infrastructure
 
@@ -295,17 +328,27 @@ For automated environments, the following can be used when appropriate:
 terraform apply -var-file=variables.tfvars --auto-approve
 ```
 
+---
+
 ### 8. Verify the Infrastructure
 
 After deployment, verify the resources through the AWS Console or AWS CLI.
 
-Useful checks include:
+Example checks:
 
 ```bash
 aws ec2 describe-instances
+```
+
+```bash
 aws rds describe-db-instances
+```
+
+```bash
 aws elbv2 describe-load-balancers
 ```
+
+---
 
 ### 9. Destroy the Infrastructure
 
@@ -321,11 +364,13 @@ For automated cleanup:
 terraform destroy -var-file=variables.tfvars --auto-approve
 ```
 
-> **Warning:** `terraform destroy` permanently removes Terraform-managed resources. Never execute it against infrastructure you need to preserve.
+> **Warning:** `terraform destroy` permanently removes Terraform-managed resources. Never execute it against infrastructure that needs to be preserved.
+
+---
 
 ## 🔄 Terraform Workflow
 
-The project follows the standard Terraform lifecycle:
+The project follows the standard Terraform infrastructure lifecycle:
 
 ```text
 Terraform Configuration
@@ -349,9 +394,11 @@ Terraform Configuration
    terraform destroy
 ```
 
+---
+
 ## 🔒 Security Considerations
 
-The project follows several infrastructure security practices:
+The project incorporates several infrastructure security practices:
 
 - IAM-based access control
 - Security groups for network-level access control
@@ -359,8 +406,11 @@ The project follows several infrastructure security practices:
 - HTTPS/SSL using ACM
 - Managed database infrastructure through Amazon RDS
 - Separation of application and database infrastructure
+- Private subnets for database infrastructure
 - No hardcoded credentials in source code
 - Sensitive configuration kept outside version-controlled source files
+
+---
 
 ## 📈 Scalability & Availability
 
@@ -368,12 +418,14 @@ The infrastructure is designed to support scalable application workloads through
 
 - Application Load Balancer
 - EC2 Auto Scaling
-- Distributed AWS infrastructure
-- Managed RDS database
+- Multiple Availability Zones
+- Managed RDS database infrastructure
 - CloudFront content delivery
 - Route 53 DNS management
 
 These components help create infrastructure that can handle changing workloads while improving availability and maintainability.
+
+---
 
 ## 🧠 Key DevOps Concepts Demonstrated
 
@@ -383,14 +435,15 @@ This project provides hands-on exposure to:
 - Terraform modules
 - AWS networking
 - VPC architecture
+- Public and private subnets
 - EC2 infrastructure
-- Load balancing
+- Application Load Balancing
 - Auto Scaling
 - IAM
 - Security groups
-- WAF
-- RDS
-- S3
+- AWS WAF
+- Amazon RDS
+- Amazon S3
 - DNS
 - CDN
 - SSL/TLS
@@ -398,6 +451,8 @@ This project provides hands-on exposure to:
 - Infrastructure lifecycle management
 - Cloud security
 - AWS CLI
+
+---
 
 ## 📚 What I Learned
 
@@ -409,9 +464,11 @@ Through this project, I worked with:
 4. Configuring AWS networking and security
 5. Deploying scalable compute infrastructure
 6. Connecting application infrastructure with managed RDS
-7. Configuring DNS, CDN and HTTPS
+7. Configuring DNS, CDN, and HTTPS
 8. Managing the infrastructure lifecycle through Terraform
 9. Applying cloud security principles to AWS resources
+
+---
 
 ## ⚠️ Disclaimer
 
@@ -421,6 +478,8 @@ The implementation was based on publicly available DevOps learning material and 
 
 All infrastructure resources should be reviewed and secured appropriately before being used in a production environment.
 
+---
+
 ## 👨‍💻 Author
 
 **Shubham Raj**
@@ -429,4 +488,3 @@ Computer Science Engineering
 Vellore Institute of Technology, Bhopal
 
 [GitHub](https://github.com/er-shubham-raj) · [LinkedIn](https://www.linkedin.com/in/shubham-raj-a0979a289/)
-
