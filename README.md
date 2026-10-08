@@ -18,6 +18,32 @@ The architecture separates the **application layer** from the **database layer**
 
 ![CloudOps AWS Two-Tier Architecture](./architecture.png)
 
+### Architecture Flow
+
+```text
+Client / User
+     │
+     ▼
+  Route 53
+     │
+     ▼
+ CloudFront
+     │
+     ▼
+   AWS WAF
+     │
+     ▼
+    ALB
+     │
+ ┌───┴────┐
+ ▼        ▼
+EC2      EC2
+ │        │
+ └───┬────┘
+     ▼
+    RDS
+```
+
 
 The complete infrastructure is deployed inside an AWS VPC across multiple Availability Zones and is managed through Terraform.
 
