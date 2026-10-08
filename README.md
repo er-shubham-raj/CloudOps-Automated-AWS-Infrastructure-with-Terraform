@@ -1,7 +1,5 @@
 # CloudOps-Automated-AWS-Infrastructure-with-Terraform
 
-# CloudForge — Scalable AWS Infrastructure as Code
-
 > A production-style two-tier AWS architecture provisioned and managed using Terraform, with a focus on scalability, security, availability, and infrastructure automation.
 
 ## 📌 Overview
